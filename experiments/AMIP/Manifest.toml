@@ -2,7 +2,7 @@
 
 julia_version = "1.10.2"
 manifest_format = "2.0"
-project_hash = "c00c8204c76db2774e82408096e51d91be9ef6bf"
+project_hash = "32292fb81d57b2c38a5a100c54022a8de6660fd6"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "016833eb52ba2d6bea9fcb50ca295980e728ee24"
@@ -361,10 +361,12 @@ weakdeps = ["CairoMakie", "GeoMakie"]
     GeoMakieExt = "GeoMakie"
 
 [[deps.ClimaAtmos]]
-deps = ["Adapt", "ArgParse", "ArtifactWrappers", "Artifacts", "AtmosphericProfilesLibrary", "ClimaComms", "ClimaCore", "ClimaParams", "ClimaTimeSteppers", "CloudMicrophysics", "Colors", "Dates", "Dierckx", "DiffEqBase", "DiffEqCallbacks", "DocStringExtensions", "FastGaussQuadrature", "Insolation", "Interpolations", "IntervalSets", "Krylov", "LinearAlgebra", "Logging", "NCDatasets", "NVTX", "Pkg", "Printf", "RRTMGP", "Random", "RootSolvers", "SciMLBase", "StaticArrays", "Statistics", "StatsBase", "SurfaceFluxes", "Thermodynamics", "YAML"]
-git-tree-sha1 = "4960972c563c63850c0c730939a0ec38281ac5c1"
+deps = ["Adapt", "ArgParse", "ArtifactWrappers", "Artifacts", "AtmosphericProfilesLibrary", "ClimaComms", "ClimaCore", "ClimaParams", "ClimaTimeSteppers", "ClimaUtilities", "CloudMicrophysics", "Colors", "Dates", "Dierckx", "DiffEqBase", "DiffEqCallbacks", "DocStringExtensions", "FastGaussQuadrature", "Insolation", "Interpolations", "IntervalSets", "Krylov", "LinearAlgebra", "Logging", "NCDatasets", "NVTX", "Pkg", "Printf", "RRTMGP", "Random", "RootSolvers", "SciMLBase", "StaticArrays", "Statistics", "StatsBase", "SurfaceFluxes", "Thermodynamics", "YAML"]
+git-tree-sha1 = "10951b7f5a1ee48766fc4baab28de3a652a8ff83"
+repo-rev = "zs/v0.23.0_progedmf"
+repo-url = "https://github.com/CliMA/ClimaAtmos.jl.git"
 uuid = "b2c96348-7fb7-4fe0-8da9-78d88439e717"
-version = "0.22.1"
+version = "0.23.0"
 
 [[deps.ClimaComms]]
 deps = ["CUDA", "MPI"]
@@ -401,7 +403,7 @@ uuid = "d934ef94-cdd4-4710-83d6-720549644b70"
 version = "0.3.14"
 
 [[deps.ClimaCoupler]]
-deps = ["ClimaAtmos", "ClimaComms", "ClimaCore", "ClimaCoreTempestRemap", "ClimaLand", "ClimaParams", "Dates", "DocStringExtensions", "Insolation", "JLD2", "NCDatasets", "Plots", "SciMLBase", "StaticArrays", "Statistics", "SurfaceFluxes", "TempestRemap_jll", "Thermodynamics"]
+deps = ["ClimaComms", "ClimaCore", "ClimaCoreTempestRemap", "Dates", "DocStringExtensions", "JLD2", "NCDatasets", "Plots", "SciMLBase", "StaticArrays", "Statistics", "SurfaceFluxes", "TempestRemap_jll", "Thermodynamics"]
 path = "../.."
 uuid = "4ade58fe-a8da-486c-bd89-46df092ec0c7"
 version = "0.0.1"
@@ -427,6 +429,24 @@ deps = ["ClimaComms", "Colors", "DataStructures", "DiffEqBase", "DiffEqCallbacks
 git-tree-sha1 = "9c203f39784c968700c55f555754a7771b3410df"
 uuid = "595c0a79-7f3d-439a-bc5a-b232dc3bde79"
 version = "0.7.19"
+
+[[deps.ClimaUtilities]]
+deps = ["Artifacts", "Dates"]
+git-tree-sha1 = "7974f09027c65595250532188309642eb6b821bb"
+uuid = "b3f4f4ca-9299-4f7f-bd9b-81e1242a7513"
+version = "0.1.7"
+weakdeps = ["Adapt", "CUDA", "ClimaComms", "ClimaCore", "ClimaCoreTempestRemap", "Interpolations", "NCDatasets"]
+
+    [deps.ClimaUtilities.extensions]
+    CUDAUtilsExt = ["ClimaCore", "CUDA"]
+    DataHandlingExt = ["ClimaCore", "NCDatasets"]
+    InterpolationsRegridderExt = ["Interpolations", "ClimaCore"]
+    MPIUtilsExt = "ClimaComms"
+    NCFileReaderExt = "NCDatasets"
+    SpaceVaryingInputsExt = ["ClimaCore", "NCDatasets"]
+    TempestRegridderExt = "ClimaCoreTempestRemap"
+    TimeVaryingInputs0DExt = "ClimaCore"
+    TimeVaryingInputsExt = ["ClimaCore", "NCDatasets"]
 
 [[deps.CloseOpenIntervals]]
 deps = ["Static", "StaticArrayInterface"]
@@ -2291,9 +2311,9 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[deps.RRTMGP]]
 deps = ["Adapt", "Artifacts", "CUDA", "ClimaComms", "DocStringExtensions", "GaussQuadrature", "Random", "StaticArrays"]
-git-tree-sha1 = "af4b414b2c57927e0be6ba49c137f30df7889a1c"
+git-tree-sha1 = "4befbe654262330dc7dace3b8841da3dce5b4f91"
 uuid = "a01a1ee8-cea4-48fc-987c-fc7878d79da1"
-version = "0.13.1"
+version = "0.13.2"
 weakdeps = ["ClimaParams"]
 
     [deps.RRTMGP.extensions]
