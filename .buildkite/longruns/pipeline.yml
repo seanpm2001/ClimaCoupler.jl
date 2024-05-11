@@ -39,51 +39,64 @@ steps:
       JULIA_NUM_PRECOMPILE_TASKS: 8
       JULIA_MAX_NUM_PRECOMPILE_FILES: 50
 
-  - label: "init clima :computer:"
-    key: "init_cpu_env_clima"
-    command:
-      - "echo $$JULIA_DEPOT_PATH"
+  # - label: "init clima :computer:"
+  #   key: "init_cpu_env_clima"
+  #   command:
+  #     - "echo $$JULIA_DEPOT_PATH"
 
-      - echo "--- Instantiate AMIP env"
-      - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.instantiate(;verbose=true)'"
-      - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.precompile()'"
-      - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.status()'"
+  #     - echo "--- Instantiate AMIP env"
+  #     - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.instantiate(;verbose=true)'"
+  #     - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.precompile()'"
+  #     - "julia --project=experiments/AMIP/ -e 'using Pkg; Pkg.status()'"
 
-      - echo "--- Download artifacts"
-      - "julia --project=artifacts -e 'using Pkg; Pkg.instantiate(;verbose=true)'"
-      - "julia --project=artifacts -e 'using Pkg; Pkg.precompile()'"
-      - "julia --project=artifacts -e 'using Pkg; Pkg.status()'"
-      - "julia --project=artifacts artifacts/download_artifacts.jl"
+  #     - echo "--- Download artifacts"
+  #     - "julia --project=artifacts -e 'using Pkg; Pkg.instantiate(;verbose=true)'"
+  #     - "julia --project=artifacts -e 'using Pkg; Pkg.precompile()'"
+  #     - "julia --project=artifacts -e 'using Pkg; Pkg.status()'"
+  #     - "julia --project=artifacts artifacts/download_artifacts.jl"
 
-    agents:
-      queue: clima
-      modules: common
-    env:
-      JULIA_NUM_PRECOMPILE_TASKS: 8
-      JULIA_MAX_NUM_PRECOMPILE_FILES: 50
+  #   agents:
+  #     queue: clima
+  #     modules: common
+  #   env:
+  #     JULIA_NUM_PRECOMPILE_TASKS: 8
+  #     JULIA_MAX_NUM_PRECOMPILE_FILES: 50
 
   - wait
 
-  - group: "Current target tests on GPU: AMIP surface"
-
+  - group: "Current target tests: AMIP surfaces"
+    
     steps:
 
-      - label: "GPU AMIP FINE: new target amip: topo + progedmf"
-        key: "gpu_amip_target_topo_diagedmf"
-        command:
-          - echo "--- Run simulation"
-          - "srun --cpu-bind=threads --cpus-per-task=4 julia --threads=3 --color=yes --project=experiments/AMIP/ experiments/AMIP/coupler_driver.jl --config_file $CONFIG_PATH/gpu_amip_target_topo_progedmf.yml"
-        artifact_paths: "experiments/AMIP/output/amip/gpu_amip_target_topo_progedmf_artifacts/*"
-        timeout_in_minutes: 1440
+      - label: "MPI AMIP FINE: new target amip: topo + progedmf"
+        key: "amip_target_topo_diagedmf"
+        command: "srun julia --color=yes --project=experiments/AMIP/ experiments/AMIP/coupler_driver.jl --config_file $CONFIG_PATH/gpu_amip_target_topo_progedmf.yml"
+        artifact_paths: "experiments/AMIP/output/amip/gpu_amip_target_topo_progedmf/*"
         env:
-          CLIMACOMMS_CONTEXT: "MPI"
+          CLIMACORE_DISTRIBUTED: "MPI"
+          BUILD_HISTORY_HANDLE: ""
         agents:
-          queue: clima
-          slurm_gpus_per_task: 1
-          slurm_cpus_per_task: 4
-          slurm_ntasks: 4
-          slurm_mem: 30GB
-          modules: common
-        soft_fail: true
+          slurm_ntasks_per_node: 16
+          slurm_nodes: 8
+          slurm_mem_per_cpu: 20G
 
-  - wait
+  # - group: "Current target tests on GPU: AMIP surface"
+
+  #   steps:
+
+  #     - label: "GPU AMIP FINE: new target amip: topo + progedmf"
+  #       key: "gpu_amip_target_topo_diagedmf"
+  #       command:
+  #         - echo "--- Run simulation"
+  #         - "srun --cpu-bind=threads --cpus-per-task=4 julia --threads=3 --color=yes --project=experiments/AMIP/ experiments/AMIP/coupler_driver.jl --config_file $CONFIG_PATH/gpu_amip_target_topo_progedmf.yml"
+  #       artifact_paths: "experiments/AMIP/output/amip/gpu_amip_target_topo_progedmf_artifacts/*"
+  #       timeout_in_minutes: 1440
+  #       env:
+  #         CLIMACOMMS_CONTEXT: "MPI"
+  #       agents:
+  #         queue: clima
+  #         slurm_gpus_per_task: 1
+  #         slurm_cpus_per_task: 4
+  #         slurm_ntasks: 4
+  #         slurm_mem: 30GB
+  #         modules: common
