@@ -21,3 +21,11 @@ topo_smoothing: true
 topography: "Earth"
 coupler_toml_file: "toml/amip.toml"
 turb_flux_partition: "CombinedStateFluxesMOST"
+aerosol_radiation: false
+# diagnostics:
+#   - short_name: [ts, ta, thetaa, ha, pfull, rhoa, ua, va, wa, hur, hus, cl, clw, cli, hussfc, evspsbl, pr]
+#     period: 1days
+#   - short_name: [arup, waup, taup, thetaaup, haup, husup, hurup, clwup, cliup, waen, tke, lmix]
+#     period: 1days
+#   - short_name: [rsdt, rsut, rlut, rsds, rsus, rlds, rlus, hfes]
+#     period: 1days
