@@ -5,7 +5,7 @@ atmos_config_file: "config/longrun_configs/amip_target_diagedmf.yml"
 coupler_toml_file: "toml/amip.toml"
 dt: "120secs"
 dt_cpl: 120
-dt_save_state_to_disk: "30days"
+dt_save_state_to_disk: "15days"
 dt_save_to_sol: "30days"
 dz_bottom: 30.0
 energy_check: false
@@ -20,10 +20,13 @@ output_default_diagnostics: true
 rayleigh_sponge: true
 start_date: "20100101"
 surface_setup: "PrescribedSurface"
-t_end: "1098days"
+t_end: "30days"
 topo_smoothing: true
 topography: "Earth"
 turb_flux_partition: "CombinedStateFluxesMOST"
 viscous_sponge: false
 z_elem: 63
 z_max: 55000.0
+diagnostics:
+  - short_name: [ts, ta, thetaa, ha, pfull, rhoa, ua, va, wa, hur, hus, cl, clw, cli, hussfc, evspsbl, hfes, pr, edt]
+    period: 6hours

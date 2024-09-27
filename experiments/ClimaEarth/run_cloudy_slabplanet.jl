@@ -35,6 +35,9 @@ import ClimaCoupler:
     TimeManager,
     Utilities
 
+import Random
+Random.seed!(1234)
+
 pkg_dir = pkgdir(ClimaCoupler)
 
 #=
