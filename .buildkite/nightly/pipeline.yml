@@ -6,6 +6,7 @@ agents:
 env:
   JULIA_MAX_NUM_PRECOMPILE_FILES: 100
   CONFIG_PATH: "config/nightly_configs"
+  JULIA_DEPOT_PATH: "${BUILDKITE_BUILD_PATH}/${BUILDKITE_PIPELINE_SLUG}/depot/default"
 
 timeout_in_minutes: 840
 
@@ -48,7 +49,7 @@ steps:
         key: "amip_random1"
         command:
           - echo "--- Run simulation"
-          - "/glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 2 -ppn 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
+          - "/glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 1 -ppn 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
         artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
         timeout_in_minutes: 1080
         env:
@@ -56,7 +57,7 @@ steps:
           CLIMACOMMS_CONTEXT: "MPI"
           JULIA_MPI_HAS_CUDA: true
         agents:
-          pbs_l_select: "2:ngpus=4"
+          pbs_l_select: "1:ngpus=4"
           
 
       # - label: "2 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
