@@ -16,20 +16,22 @@ steps:
       - "echo $$JULIA_DEPOT_PATH"
 
       - echo "--- Instantiate AMIP env"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.instantiate(;verbose=true)'"
 
       # For this pipeline, use the main branches of certain upstream packages
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"ClimaAtmos\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"ClimaLand\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"ClimaCore\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"Thermodynamics\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"SurfaceFluxes\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(Pkg.PackageSpec(;name=\"RRTMGP\", rev=\"main\"))'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.resolve()'"
-
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.add(\"MPI\"); Pkg.add(\"CUDA\")'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.precompile()'"
-      - "julia --project=experiments/ClimaEarth/ -e 'using Pkg; Pkg.status()'"
+      - |
+        julia --project=experiments/ClimaEarth/ -e '
+        using Pkg
+        Pkg.Registry.update()
+        package_spec(pkg) = Pkg.PackageSpec(;name=pkg, rev="main")
+        pkg_names = ["ClimaAtmos","ClimaLand","ClimaCore",
+                    "Thermodynamics","SurfaceFluxes","RRTMGP"]
+        pkgs = map(package_spec, pkg_names)
+        ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
+        foreach(Pkg.add, pkgs)
+        Pkg.resolve()
+        Pkg.add(["MPI", "CUDA"])
+        ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
+        Pkg.instantiate(;verbose=true)'
 
       - echo "--- Download artifacts"
       - "julia --project=experiments/ClimaEarth/ artifacts/download_artifacts.jl"
@@ -42,24 +44,11 @@ steps:
   - group: "AMIP coarse ensemble"
 
     steps:
-
-      - label: "Coarse current AMIP: diagedmf + 0M + bucket land"
-        key: "amip"
-        command:
-          - echo "--- Run simulation"
-          - "julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse.yml --job_id amip_coarse"
-        artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse/artifacts/*"
-        timeout_in_minutes: 840
-        env:
-          CLIMACOMMS_DEVICE: "CUDA"
-        agents:
-          pbs_l_select: "1:ngpus=1"
-
       - label: "1 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
         key: "amip_random1"
         command:
           - echo "--- Run simulation"
-          - "julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
+          - "$MPITRAMPOLINE_MPIEXEC -n 2 -ppn 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
         artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
         timeout_in_minutes: 1080
         env:
@@ -67,7 +56,8 @@ steps:
           CLIMACOMMS_CONTEXT: "MPI"
           JULIA_MPI_HAS_CUDA: true
         agents:
-          pbs_l_select: "1:ngpus=4"
+          pbs_l_select: "2:ngpus=4"
+          
 
       # - label: "2 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
       #   key: "amip_random2"
