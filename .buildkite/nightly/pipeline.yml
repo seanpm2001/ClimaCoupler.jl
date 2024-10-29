@@ -25,9 +25,8 @@ steps:
         package_spec(pkg) = Pkg.PackageSpec(;name=pkg, rev="main")
         pkg_names = ["ClimaAtmos","ClimaLand","ClimaCore",
                     "Thermodynamics","SurfaceFluxes","RRTMGP"]
-        pkgs = map(package_spec, pkg_names)
         ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
-        foreach(Pkg.add, pkgs)
+        Pkg.add(map(package_spec, pkg_names))
         Pkg.resolve()
         Pkg.add(["MPI", "CUDA"])
         ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
@@ -48,7 +47,7 @@ steps:
         key: "amip_random1"
         command:
           - echo "--- Run simulation"
-          - "$MPITRAMPOLINE_MPIEXEC -n 2 -ppn 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
+          - "/glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 2 -ppn 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
         artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
         timeout_in_minutes: 1080
         env:
