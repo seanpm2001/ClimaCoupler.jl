@@ -1,6 +1,6 @@
 agents:
   queue: derecho
-  modules: climacommon/2024_10_09
+  modules: climacommon/2024_05_27
   pbs_q: develop@desched1
 
 env:
