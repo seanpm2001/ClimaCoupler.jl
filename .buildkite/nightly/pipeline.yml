@@ -1,6 +1,6 @@
 agents:
   queue: derecho
-  modules: climacommon/2024_05_27
+  modules: climacommon/2024_10_09
   pbs_q: develop@desched1
 
 env:
@@ -55,20 +55,19 @@ steps:
         agents:
           pbs_l_select: "1:ngpus=1"
 
-      # - label: "1 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
-      #   key: "amip_random1"
-      #   command:
-      #     - echo "--- Run simulation"
-      #     - "julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
-      #   artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
-      #   timeout_in_minutes: 1080
-      #   env:
-      #     CLIMACOMMS_DEVICE: "CUDA"
-      #   agents:
-      #     slurm_gpus_per_task: 1
-      #     slurm_cpus_per_task: 4
-      #     slurm_ntasks: 1
-      #     slurm_mem: 30GB
+      - label: "1 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
+        key: "amip_random1"
+        command:
+          - echo "--- Run simulation"
+          - "julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
+        artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
+        timeout_in_minutes: 1080
+        env:
+          CLIMACOMMS_DEVICE: "CUDA"
+          CLIMACOMMS_CONTEXT: "MPI"
+          JULIA_MPI_HAS_CUDA: true
+        agents:
+          pbs_l_select: "1:ngpus=4"
 
       # - label: "2 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
       #   key: "amip_random2"
