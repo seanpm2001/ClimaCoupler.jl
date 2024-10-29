@@ -25,8 +25,9 @@ steps:
         package_spec(pkg) = Pkg.PackageSpec(;name=pkg, rev="main")
         pkg_names = ["ClimaAtmos","ClimaLand","ClimaCore",
                     "Thermodynamics","SurfaceFluxes","RRTMGP"]
+        pkgs = map(package_spec, pkg_names)
         ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
-        Pkg.add(map(package_spec, pkg_names))
+        foreach(Pkg.add, pkgs)
         Pkg.resolve()
         Pkg.add(["MPI", "CUDA"])
         ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
