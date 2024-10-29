@@ -21,16 +21,16 @@ steps:
       - |
         julia --project=experiments/ClimaEarth/ -e '
         using Pkg
-        Pkg.Registry.update()
-        package_spec(pkg) = Pkg.PackageSpec(;name=pkg, rev="main")
-        pkg_names = ["ClimaAtmos","ClimaLand","ClimaCore",
-                    "Thermodynamics","SurfaceFluxes","RRTMGP"]
-        pkgs = map(package_spec, pkg_names)
-        ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
-        foreach(Pkg.add, pkgs)
-        Pkg.resolve()
+        # Pkg.Registry.update()
+        # package_spec(pkg) = Pkg.PackageSpec(;name=pkg, rev="main")
+        # pkg_names = ["ClimaAtmos","ClimaLand","ClimaCore",
+        #             "Thermodynamics","SurfaceFluxes","RRTMGP"]
+        # pkgs = map(package_spec, pkg_names)
+        # ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
+        # foreach(Pkg.add, pkgs)
+        # Pkg.resolve()
         Pkg.add(["MPI", "CUDA"])
-        ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
+        # ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
         Pkg.instantiate(;verbose=true)'
 
       - echo "--- Download artifacts"
