@@ -57,7 +57,7 @@ steps:
           CLIMACOMMS_CONTEXT: "MPI"
         agents:
           pbs_q: develop
-          pbs_l_select: "1:ngpus=4:ncpus:4"
+          pbs_l_select: "1:ngpus=4:ncpus=64"
           
 
       # - label: "2 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
