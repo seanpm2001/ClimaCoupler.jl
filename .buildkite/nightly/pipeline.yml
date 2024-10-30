@@ -53,6 +53,7 @@ steps:
         key: "amip_random1"
         command:
           - echo "--- Run simulation"
+          - echo "--- full env"
           - "/glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
         artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
         timeout_in_minutes: 1080
