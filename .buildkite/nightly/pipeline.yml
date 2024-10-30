@@ -59,6 +59,7 @@ steps:
         env:
           CLIMACOMMS_DEVICE: "CUDA"
           CLIMACOMMS_CONTEXT: "MPI"
+          NGPUS: 4
         agents:
           pbs_q: develop
           pbs_l_select: "1:ngpus=4:ncpus=64"
