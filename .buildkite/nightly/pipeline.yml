@@ -17,6 +17,10 @@ steps:
       - "echo $$JULIA_DEPOT_PATH"
 
       - echo "--- Instantiate AMIP env"
+      - env | grep -E "NGPUS|PBS|GPU|MPI"
+      - echo "--- full env"
+      - env
+
 
       # For this pipeline, use the main branches of certain upstream packages
       - |
@@ -38,7 +42,7 @@ steps:
       - "julia --project=experiments/ClimaEarth/ artifacts/download_artifacts.jl"
 
     agents:
-      pbs_l_select: "1:ngpus=1"
+      pbs_l_select: "1:ngpus=1:mpiprocs=1"
 
   - wait
 
