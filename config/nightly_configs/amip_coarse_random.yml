@@ -9,7 +9,7 @@ dt_save_state_to_disk: "30days"
 dt_save_to_sol: "30days"
 dz_bottom: 100.0
 energy_check: false
-h_elem: 16
+h_elem: 64
 hourly_checkpoint: true
 hourly_checkpoint_dt: 720
 land_albedo_type: "map_temporal"
