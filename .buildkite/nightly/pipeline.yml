@@ -56,7 +56,8 @@ steps:
           CLIMACOMMS_DEVICE: "CUDA"
           CLIMACOMMS_CONTEXT: "MPI"
         agents:
-          pbs_l_select: "1:ngpus=4"
+          pbs_q: preempt
+          pbs_l_select: "1:ngpus=4:ncpus:64"
           
 
       # - label: "2 Coarse current AMIP: diagedmf + 0M + bucket land (unique seed)"
