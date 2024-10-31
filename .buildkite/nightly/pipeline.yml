@@ -56,7 +56,7 @@ steps:
           - env
           - echo "--- Test GPU/MPI"
           - >
-            $MPITRAMPOLINE_MPIEXEC -n 4
+            /glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 4
             set_gpu_rank
             nsys profile --trace=nvtx,cuda,mpi -o report1.nsys-rep --force-overwrite true
             julia --project=/glade/campaign/univ/ucit0011/slurm-buildkite cuda_mpi_test.jl &&
@@ -64,7 +64,7 @@ steps:
             grep -C 5 "MemOps"
           - echo "--- Run simulation"
           - >
-            $MPITRAMPOLINE_MPIEXEC -n 4 
+            /glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 4 
             set_gpu_rank 
             julia --threads=3 --color=yes --project=experiments/ClimaEarth/ 
             experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml 
