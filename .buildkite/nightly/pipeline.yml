@@ -59,7 +59,7 @@ steps:
             /glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 4
             set_gpu_rank
             nsys profile --trace=nvtx,cuda,mpi -o report1.nsys-rep --force-overwrite true
-            julia --project=/glade/campaign/univ/ucit0011/slurm-buildkite cuda_mpi_test.jl &&
+            julia --project=/glade/campaign/univ/ucit0011/slurm-buildkite /glade/campaign/univ/ucit0011/slurm-buildkite/cuda_mpi_test.jl &&
             nsys stats --force-export=true report1.nsys-rep |
             grep -C 5 "MemOps"
           - echo "--- Run simulation"
