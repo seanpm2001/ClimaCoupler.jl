@@ -34,7 +34,7 @@ steps:
         # ENV["JULIA_PKG_PRECOMPILE_AUTO"]=0
         # foreach(Pkg.add, pkgs)
         # Pkg.resolve()
-        Pkg.add(["MPI", "CUDA"])
+        Pkg.add(["MPI", "CUDA", "NVTX"])
         # ENV["JULIA_PKG_PRECOMPILE_AUTO"]=1
         Pkg.instantiate(;verbose=true)'
 
@@ -54,8 +54,21 @@ steps:
         command:
           - echo "--- full env"
           - env
+          - echo "--- Test GPU/MPI"
+          - >
+            $MPITRAMPOLINE_MPIEXEC -n 4
+            set_gpu_rank
+            nsys profile --trace=nvtx,cuda,mpi -o report1.nsys-rep --force-overwrite true
+            julia --project=/glade/campaign/univ/ucit0011/slurm-buildkite cuda_mpi_test.jl &&
+            nsys stats --force-export=true report1.nsys-rep |
+            grep -C 5 "MemOps"
           - echo "--- Run simulation"
-          - "/glade/campaign/univ/ucit0011/software/MPIwrapper/2024_05_27/bin/mpiwrapperexec -n 4 set_gpu_rank julia --threads=3 --color=yes --project=experiments/ClimaEarth/ experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml --job_id amip_coarse_random1"
+          - >
+            $MPITRAMPOLINE_MPIEXEC -n 4 
+            set_gpu_rank 
+            julia --threads=3 --color=yes --project=experiments/ClimaEarth/ 
+            experiments/ClimaEarth/run_amip.jl --config_file $CONFIG_PATH/amip_coarse_random.yml 
+            --job_id amip_coarse_random1"
         artifact_paths: "experiments/ClimaEarth/output/amip/amip_coarse_random1/artifacts/*"
         timeout_in_minutes: 1080
         env:
